@@ -81,6 +81,7 @@
 (fib 20)	2.4ms	Atom/1.6GHz 2008
 (fib 20)	1.9ms	Atom D2700 4-cores/2.3GHz (2012.8)
 (fib 20)	10ms	Raspberry Pi (2013)
+(fib 20)	4.3ms	Raspberry Pi 3B+ (2018)
 (fib 20)	0.45ms	core-i5 2500 3.3GHz (2012)
 
 ------------------------------
