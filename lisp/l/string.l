@@ -5,13 +5,15 @@
 ;;
 ;; 	character types
 ;;
-(list "@(#)$Id$")
+(list "@(#)$Id: string.l,v 1.8 2015/06/29 10:52:32 toshihiro Exp $")
 
 (in-package "LISP")
 (export '(true-string string make-string string-left-trim
 	string-right-trim string-trim nstring-downcase
 	nstring-upcase string-upcase string-downcase string= string-equal
-	substringp pathname pathnamep pathname namestring pathname-directory
+	substringp string-match-at string-match bm-string-match nth-position
+	string-replace
+	pathname pathnamep pathname namestring pathname-directory
 	pathname-name pathname-type directory-namestring make-pathname
 	parse-namestring *default-pathname-defaults* null-string-p
 	merge-pathnames concatenate-pathnames truename
@@ -122,6 +124,7 @@
 (defun string-equal (str1 str2 &key (start1 0) (end1 100000000)
 			  (start2 0) (end2 100000000))
   (stringequal str1 str2 start1 end1 start2 end2))
+
 (defun substringp (sub str)
   (do ((i (- (length str) (length sub)))
        (l (length sub))
@@ -129,6 +132,63 @@
       ((> j i) nil)
     (when (string-equal sub str :start2 j  :end2 (+ j l))
           (return-from substringp t))))
+
+
+;;; Boyer-Moore string match is added in 2015 by Toshihiro Matsui
+;;; not sure if this works for multibyte codes like UTF-8
+
+(defun string-match-at (pattern target pos)
+   (let ((plen (length pattern)))
+      (dotimes (i plen)
+	 (if (not (eq (aref pattern i) (aref target (+ pos i))))
+	     (return-from string-match-at nil)))
+      t))
+
+(defun string-match (pattern target &optional (start 0) (end (length target)))
+    (setq end (min end (length target)))
+    (dotimes (i (- end (length pattern) start -1))
+	  (if (string-match-at pattern target (+ i start))
+	      (return-from string-match (+ i start))))
+       nil)
+
+(defun nth-position (item target start nth) ;; nth=1 returns the first occurence
+   (let (s)
+    (dotimes (i nth)
+	 (setq s (position item target :start start ))
+	 (unless s (return-from nth-position nil))
+	 (setq start (1+ s))
+	 )
+      s) )
+
+(defun BM-string-match (pattern target &optional (start 0) (end (length target)))
+   ;; Boyer & Moore's fast string matcher
+   (let* ((skip (make-array 256))
+	 (patlen (length pattern)) 
+	 (i start) (j 0))
+      (fill skip patlen)
+      (dotimes (k (1- patlen)) (setf (aref skip (char pattern k)) (- patlen k 1)))
+      (setq i (+ start (1- patlen)))
+      (while (< i end)
+	 (setq j (1- patlen))
+	 (while (= (aref target i) (aref pattern j))
+	    (if (<= j 0)
+		(return-from bm-string-match i))
+	    (decf i) (decf j)
+	    )
+	 (incf i (max (- patlen j) (aref skip (char target i)))))
+	 )
+      nil) 
+
+(defun string-replace (new old line &optional (start 0))
+    (cond ((setq start (string-match (string old) line start))
+	   (concatenate string
+	        (subseq line 0 start)
+                new
+                (subseq line (+ start (length (string old))))) )
+	  (t line))
+    )  ;note that string is not copied unless pattern is found
+
+
 
 (defmethod string
   (:get (pos type) (sys:peek self pos type) )
