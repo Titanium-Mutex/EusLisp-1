@@ -91,7 +91,7 @@
 	    (setf (second v-desc) (+ (second u-desc) weight)) 
 	    (setf (third v-desc) u))))
 
-(defun dijkstra (&optional (startsym 'start) (endsym 'end) (g *graph*))
+(defun shortest (&optional (startsym 'start) (endsym 'end) (g *graph*))
    (set-start-shortest g)
    (dolist (u (toposort g))
       (dolist (v (next-nodes u))  (relax u v) ) )
@@ -101,6 +101,35 @@
       (while prev
 	 (push prev path)
 	 (setq prev (caddr (assoc prev g))))
+      path)
+   )
+
+(defun find-shortest (nodes)
+   (let ((node) (ss) (dist))
+      (setq ss (pop nodes) dist (cadr ss))
+      (while nodes
+	 (setq node (pop nodes))
+	 (when (< (cadr node) dist)
+	     (setq ss node dist (cadr node)))
+	 )
+      ss))
+
+(defun dijkstra (&optional (startsym 'start) (endsym 'end) (g *graph*))
+   (let ((q (copy-list g))   (u))
+      (set-start-shortest q)
+      (while q
+	 (setq u (find-shortest q))
+	 ; (print u)
+	 (setq q (remove u q))
+         (dolist (v (next-nodes (car u))) 
+		; (print (list (car u) v))
+	        (relax (car u) v) ) )
+	;
+   (let ((prev endsym)  ;traverse from the endsym
+	 (path))
+      (while prev
+	 (push prev path)
+	 (setq prev (caddr (assoc prev g))) )
       path)
    )
 
