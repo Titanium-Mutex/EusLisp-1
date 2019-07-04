@@ -82,7 +82,7 @@
 (in-package "PQ")
 
 (export '(pgsql query escape-quote table-fields table-attributes
-	table-pkey
+	table-pkey where
 	tables
 	select update-record insert-record insert-record2
 	delimit-list delete-record

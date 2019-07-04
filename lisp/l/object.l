@@ -96,6 +96,11 @@ Returns the list of all methods callable by the object. If pattern is given, ret
 	  (push s r)
 	  (setq s (send s :super)))
        (nreverse r)))
+ (:add-method (new-method)
+    (if (null (assoc (car new-method) methods))
+	(setq methods (cons new-method methods)) 
+	(rplacd (assoc (car new-method)  methods) (cdr new-method)))
+    (car new-method))
   )
 
 (defmethod load-module
