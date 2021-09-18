@@ -95,7 +95,7 @@
 #+:linux
 (setq *libpq* (cond
                ((probe-file "/usr/lib/libpq.so") (load "/usr/lib/libpq.so"))
-               ((probe-file "/usr/lib/x86_64-linux-gnu/libpq.so") (load "/usr/lib/x86_64-linux-gnu/libpq.so"))
+               ((probe-file "/usr/lib/x86_64-linux-gnu/libpq.so.5") (load "/usr/lib/x86_64-linux-gnu/libpq.so.5"))
                ((probe-file "/usr/lib/i386-linux-gnu/libpq.so") (load "/usr/lib/i386-linux-gnu/libpq.so"))
                (t nil)))
 #+:cygwin
@@ -466,7 +466,10 @@
 	(6 (error  ";; db non fatal error") )
 	(7 (error  ";; db fatal error"))
 	))
- (:exec (query) (send self :process-result (pqexec connection query)))
+ (:exec (&rest query)
+    (setq query (apply #'format nil query))
+    (if *debug* (pprint query *error-output*))
+    (send self :process-result (pqexec connection query)))
  )
 
 ;; large object

@@ -33,7 +33,7 @@
 (setf (get :euc :charset) 'x-euc-jp)
 (setf (get :jis :charset) 'iso-2022-jp)
 (setf (get :sjis :charset) 'sjis_jp)
-
+(setf(get :utf-8 :charset) 'utf-8)
 
 (defun esj (str)
   (case *charset*
@@ -184,7 +184,7 @@
 				    (send col :iso-string))
 			      ((email-address-p col)
 				(format nil "<a href=\"mailto:~a\">~a</a>" col col))
-			      ((stringp col) (esj col))
+			      ((stringp col) #| (esj col)|# col)
 			      (t col)) ) )) 
           (format outstr "</tr>~%"))
      (format outstr "</table>~%")
@@ -267,16 +267,28 @@
  )
 
 
-(defun qval (arg query)
+(defun qval (arg &optional (query *queries*) (default nil))
    (let ((query (cadr (assoc arg query))))
-     (if query (sjis2euc query) nil)) )
-
+     (if query
+	 (if (stringp query)
+	     (let ((lbrack 0) (rbrack 0))
+		(delete #\" (delete #\' query)) ;"remove quotes to secure SQL injection
+	        (while (and (setq lbrack (position #\< query :start lbrack))
+			    (setq rbrack (position #\> query :start lbrack)))
+		    (setq query (concatenate string
+			(subseq query 0 lbrack)	(subseq query (1+ rbrack))))
+		    ) ;while
+		 query)	;; let
+	      query)	;; else number?
+	 default)) )
 
 (defun xqval (arg query &optional (default nil))
    (let ((q (assoc arg query)))
       (if q
-	  (read-from-string (sjis2euc (second q)) nil default)
+	  (read-from-string (second q) nil default)
 	  default)))
+
+
 
 (defun parse-http-query (query-string)
   (labels 
@@ -314,7 +326,11 @@
 	   result)      )
        result) ) )
    ;;
-
+(defun cgi-query-pairs ()
+   (let ((queries (get-cgi-query)))
+      (if (consp queries)
+	  queries
+	  (parse-http-query queries))))
 
 ;;;
 ;;; COOKIES
