@@ -723,7 +723,7 @@
 ;;; Define a table as a class
 ;;;
 
-(export '(table tabla-class pgtable
+(export '(table table-class pgtable
 	  make-table-class define-table-class
 	  pgval-string))
 
@@ -784,7 +784,7 @@
     (setq oid (caar (send db :exec "select oid from pg_class where relname='~a'" tablename)))
     self)
  (:db () db)
- (:pkey () pkey)
+ (:primary-key () pkey)
  (:tablename () tablename)
  (:fields () field-list)
  (:type (v) (third (assoc v field-list :key #'second)))
@@ -802,8 +802,8 @@
   (:db () (table-class-db (class self)) )
   (:fields () (table-class-field-list (class self)) )
   (:type (v) (send (class self) :type v))
-  (:pkey () (table-class-pkey (class self)) )
-  (:pkey-val (&optional x) (if x (setq pkey-val x)) pkey-val)
+  (:primary-key () (table-class-pkey (class self)) )
+  (:pimary-key-val (&optional x) (if x (setq pkey-val x)) pkey-val)
   (:tablename () (table-class-tablename (class self)) )
   (:exec (&rest queries) (send* (table-class-db (class self)) :exec queries))
   (:values () values)
@@ -823,7 +823,7 @@
      (let ((vpos (send self :varpos var)))
 	(unless  values (error "null values var"))
 	(setf (elt values vpos) val) 
-	(if (eq var (send self :pkey)) (setq pkey-val val))
+	(if (eq var (send self :primary-key)) (setq pkey-val val))
 	val) )
   (:read (&optional (key pkey-val))	; read a record from DB and store in my slots
      (setq pkey-val key)
@@ -867,7 +867,7 @@
 	  (send self :tablename)
 	  (send self :var-list)
 	  (send self :value-list)
-	  (send self :pkey) pkey-val)
+	  (send self :primary-key) pkey-val)
      )
   (:insert ()
 	(send (send self :db) :exec
