@@ -31,6 +31,7 @@
 		interval-time
 		calendar-time
 		*month-names*
+		month-name
 		))
 
 (defparameter TZ (read-from-string (car (elt (unix:localtime) 9))))
@@ -40,7 +41,7 @@
 (defparameter *month-names*
         '((Jan 0) (feb 1) (mar 2) (apr 3) (may 4) (jun 5)
           (jul 6) (aug 7) (sep 8) (oct 9) (nov 10) (dec 11)
-          (January 0) (February 1) (March 2) (April 3) (June 5)
+          (January 0) (February 1) (March 2) (April 3) (May 4) (June 5)
           (July 6) (August 7) (September 8) (October 9)
           (November 10) (December 11)) )
 
@@ -85,7 +86,6 @@
      )
    )
 
-
 (defun month-index (mname)
    ;; convert month names (January, February ...) to 0, 1, 2...
    (cond ((symbolp mname)
@@ -115,6 +115,10 @@
               wdname))
          (t (error "weekday name"))
          ))
+
+(defun month-name (mm &optional (longname nil))
+   (string (car (nth (1- (if longname (+ mm 12 ) mm))
+	*month-names*))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -448,10 +452,10 @@
  (:weekday-string (&optional (lang :english) (long nil))
     (let (weekday-name)
        (setq weekday-name (nth weekday
-		'(( "Sunday" "Sun" "日曜" "日") ("Monday" "Mon" "月曜" "月")
-		  ("Tuesday" "Tue" "火曜" "火") ("Wednesday" "Wed" "水曜" "水")
-		  ("Thursday" "Thu" "木曜" "木") ("Friday" "Fri" "金曜" "金")
-		  ("Saturday" "Sat" "土曜" "土")) ))
+		'(( "Sunday" "Sun" "$Bf%f(J" "$Bf%(J") ("Monday" "Mon" "$Bff(J" "$Bf(J")
+		  ("Tuesday" "Tue" "$Bg+f(J" "$Bg+(J") ("Wednesday" "Wed" "$Bf04f(J" "$Bf04(J")
+		  ("Thursday" "Thu" "$Bf(f(J" "$Bf((J") ("Friday" "Fri" "$Bif(J" "$Bi(J")
+		  ("Saturday" "Sat" "$Bef(J" "$Be(J")) ))
        (case lang
 	 ((japanese :japanese :jp jp)
 	  (if long (third weekday-name) (fourth weekday-name)))

@@ -6,7 +6,7 @@
 ;;;  A plain password give is compared to an encrypted password,
 ;;;  and returns T if they match.
 
-(let ((mm (load "/usr/lib/libcrypt.so")))
+(let ((mm (load "libcrypt.so")))
 ;; (crypt string salt)
 (defforeign crypt mm "crypt" (:string :string) (:string 13))
 )

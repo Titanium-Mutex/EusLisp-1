@@ -368,7 +368,8 @@
 ;; session ends. 
    (if (numberp expires)
 	(setq expires
-	      (send (now) :add (instance interval-time :make :second expires))))
+	      (send (now) :add (instance interval-time :make
+		 :second (+ expires (third (unix:gettimeofday)))))))
    (format port "~a=~a; path=~a; domain=~a; ~a~a"
 	key value path domain
 	(if expires " expires=" "")
@@ -378,7 +379,7 @@
 			(format nil "~a, ~a-~a-~a ~a:~a:00 GMT"
 			    (send expires :weekday-string)
 			    (digits-string (send expires :day) 2)
-			    (digits-string (send expires :month) 2)
+			    (month-name (send expires :month) nil)
 			    (digits-string (send expires :year) 4)
 			    (digits-string (send expires :hour) 2)
 			    (digits-string (send expires :minute) 2)
