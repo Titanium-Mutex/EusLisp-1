@@ -794,14 +794,14 @@
  )
 
 (defmethod pgtable
-  (:init (key)
-	(setq pkey-val key)
+  (:init (key &optional (where nil))
 	(setq values (make-list (length (send self :fields))))
-	(send self :read key)
+	(send self :read key where)
 	self)
   (:db () (table-class-db (class self)) )
   (:fields () (table-class-field-list (class self)) )
   (:type (v) (send (class self) :type v))
+  (:omit-list () (send (class self) :omit-list))
   (:primary-key () (table-class-pkey (class self)) )
   (:pimary-key-val (&optional x) (if x (setq pkey-val x)) pkey-val)
   (:tablename () (table-class-tablename (class self)) )
@@ -815,7 +815,10 @@
      (let ((vpos (position var (table-class-field-list (class self)) :key #'second)))
 	(unless vpos (error "no such table field" var))
 	vpos))
-  (:omit-list () (send (class self) :omit-list))
+  (:primary-key-index ()
+	(send self :varpos (send self :primary-key)))
+	;(car (assoc (send self :primary-key) (send self :fields)
+	;	 :key #'second))
   (:getf (v) ;get field -- don't mix with :GET of propertied-object (get sym prop)
      (elt values (send self :varpos v))	
      )
@@ -825,16 +828,22 @@
 	(setf (elt values vpos) val) 
 	(if (eq var (send self :primary-key)) (setq pkey-val val))
 	val) )
-  (:read (&optional (key pkey-val))	; read a record from DB and store in my slots
-     (setq pkey-val key)
-     (let ((vals) (db-vals))
-	   (setq db-vals (pq:query (send self :db) nil
-		(format nil "select * from ~a where ~a='~a'"
+  (:read (&optional (key pkey-val) (where nil))
+     ; fill the slots by reading a db reacord
+     (let ((vals) (db-vals) (where-clause))
+	(setq where-clause
+	   (if where
+		(format nil "where ~a" key)
+		(format nil "where ~a='~a'"
+			(table-class-pkey (class self)) key) ) )
+	(setq db-vals
+	    (send (send self :db) :exec
+		"select * from ~a ~a"
 		   (table-class-tablename (class self))
-		   (table-class-pkey (class self))
-		   key))  	)
-	   (setq rcount (length db-vals))
-	   (send self :set-slots (car db-vals))
+		   where-clause) )
+        (setq rcount (length db-vals))
+	(send self :set-slots (car db-vals))
+	(setq pkey-val (nth (send self :primary-key-index) values))
       self) )
   (:set-slots (srec) ;selected record
      (cond (srec
@@ -875,6 +884,17 @@
 		(send self :var-list)
 		(send self :value-list))
 	self)
+ (:html-input-table ()
+	(mapcar #'(lambda (f v)
+	   (if (> (length (string v)) 20)
+		(format nil
+			"<textarea name=~s rows=~a cols=80>~a</textarea>"
+			f (/ (length (string v)) 60) v)
+		(format nil
+			"<input type=text size=50 name=~s value=~s>"
+			f v)) )
+	   (send self :vars) values)
+    )
  )
 
 

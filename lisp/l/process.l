@@ -14,8 +14,8 @@
     `(unix:chdir ,dir))
 (defun pwd () (unix:getwd))
 (defun ez (&optional (key (read-from-string (unix:getenv "LOGINPID") )))
-   (let ((msg1 (unix:msgget (+ key #x50000)))
-	 (msg2 (unix:msgget (+ key #x60000)))
+   (let ((msg1 (unix:msgget (logior (logand #xffff key) #x500000)))
+	 (msg2 (unix:msgget (logior (logand #xffff key) #x600000)))
 	 (buf (instantiate string 256))
 	 (inputs nil) (msg nil))
       (unix:msgsnd msg1 "" 0 2)	;start ez

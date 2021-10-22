@@ -14,6 +14,8 @@
    (setq *exit-on-fatal-error* t)
    )
 
+(export '(gen html-table))
+
 ;; time must be loaded before kana
 (require :time "time" :package :LISP)
 (require :kana "kana_euc.l")
