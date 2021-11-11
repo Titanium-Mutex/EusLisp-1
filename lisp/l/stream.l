@@ -176,8 +176,12 @@
 	   (push (subseq buffer 0 uread-length) bufs))
 	(apply #'concatenate string (nreverse bufs))
 	))
-   )
- 
+  (:reset ()
+      (send-super :reset)
+      (unix:lseek fd 0)
+      self)		 
+  )
+
 (defun make-two-way-stream (in out)
    (instance io-stream :init in out))
 

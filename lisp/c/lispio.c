@@ -552,7 +552,9 @@ pointer argv[];
 	default:	break;
         }  
       }
-    else writech(dest,cch);}
+    else {
+	if (cch=='\\') cch=nextcch();
+        writech(dest,cch);} }
   if (argv[0]==NIL) {
     a=makestring((char *)dest->c.stream.buffer->c.str.chars,
 		 intval(dest->c.stream.count));
