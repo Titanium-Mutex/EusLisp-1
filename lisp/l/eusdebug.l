@@ -148,7 +148,9 @@
 	    (2 (format file "~4,4x " (logand #xffff (sys:peek s i :short))))
 	    (4 (format file "~8,8x " (sys:peek s i :long))) )
 	 (incf i increment)
-	 (if (= (mod i width) 0) (terpri file)))))
+	 (if (= (mod i width) 0) (terpri file)))
+      (finish-output file)
+   ))
 
 #|
 (defun store-bytes (str pos &rest bytes)

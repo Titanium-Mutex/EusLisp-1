@@ -800,6 +800,7 @@
 	self)
   (:db () (table-class-db (class self)) )
   (:fields () (table-class-field-list (class self)) )
+  (:field-names () (mapcar #'second (send self :fields)))
   (:type (v) (send (class self) :type v))
   (:omit-list () (send (class self) :omit-list))
   (:primary-key () (table-class-pkey (class self)) )
@@ -879,6 +880,9 @@
 	  (send self :primary-key) pkey-val)
      )
   (:insert ()
+	(format t  "insert into ~a (~a) values (~a)~%" (send self :tablename)
+		(send self :var-list)
+		(send self :value-list))
 	(send (send self :db) :exec
 	  "insert into ~a (~a) values (~a)" (send self :tablename)
 		(send self :var-list)
