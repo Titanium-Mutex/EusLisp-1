@@ -41,7 +41,7 @@ static char *rcsid="@(#)$Id: unixcall.c,v 1.1.1.1 2016/06/26 06:57:53 toshihiro 
 #include <netdb.h>
 #include <sys/mman.h>
 #include <string.h>
-#include <unistd.h>		/* for lseek */
+#include <unistd.h>		/* for lseek and sysconf*/
 #endif
 
 /*SONY/news doesn't have message queu ipc facilities*/
@@ -97,6 +97,20 @@ extern pointer eussigvec[NSIG];
 extern eusinteger_t coerceintval(pointer);
 
 
+/****************************************************************
+/* sysconf  added Nov. 2021 by Toshihiro Matsui
+/****************************************************************/
+
+#if !vxworks
+
+pointer SYSCONF(context *ctx, int n, pointer argv[])
+{ int i;
+  ckarg(1);
+  return(makeint(sysconf(ckintval(argv[0]))));
+  }
+
+#endif
+
 /***************** times and status *****************/
 
 #if !vxworks
@@ -2032,6 +2046,7 @@ pointer mod;
 
 /*not supported by vxworks*/
 #if !vxworks
+  defun(ctx,"SYSCONF",mod,SYSCONF);
   defun(ctx,"PTIMES",mod,PTIMES);
   defun(ctx,"RUNTIME",mod,RUNTIME);
   defun(ctx,"LOCALTIME",mod,LOCALTIME);

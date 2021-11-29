@@ -47,11 +47,12 @@
 ;; #define REG_NOTEOL (1 << 1)
 
 ;; returns nil if there is no match
+;; 64-bit version
 (defun regmatch (pattern target
 		 &key (start 0) (extended t) (icase t) (newline t) (nosub nil))
-   (let ((preg (make-string 40)) (cflags) (stat)
-	 (rex-matches (make-array 8 :element-type :integer))
-	 (tstart (+ (sys:address target) 8 start)) )
+   (let ((preg (make-string 256)) (cflags) (stat)
+	 (rex-matches (make-array 128 :element-type :char)) ; 8-byte per a match
+ 	 (tstart (+ (sys:address target) 16 start)) (result))
      (setq cflags
 	   (logior (if extended 1 0)
 		   (if icase 2 0)
@@ -62,16 +63,23 @@
 	(warn "regmatch: regular expression compilation error ~s" pattern)
 	(return-from regmatch nil)) 
      (setq stat 
-	(regexec preg tstart 6 rex-matches 0))
+	(regexec preg tstart 16 rex-matches 0))
+     (setq *reg* rex-matches)
      (regfree preg)
      (cond ((zerop stat)
-	    (list (+ start (aref rex-matches 0))
-		  (+ start (aref rex-matches 1))
-		  (+ start (aref rex-matches 2))
-		  (+ start (aref rex-matches 3))
-		  (+ start (aref rex-matches 4))
-		  (+ start (aref rex-matches 5))
-		  ))
+	    (dotimes (i 8)
+		(let ((x 0) (y 0) (ii (* i 2)))
+		  (dotimes (j 4)
+		     (setq x (+ (ash x 8) (aref rex-matches (- (* (1+ ii) 8) j 1))))
+		     (setq y (+ (ash y 8) (aref rex-matches (- (* (1+ ii) 8) j 5))))	)
+		  (if (>= x #x80000000)
+		      (setq x (ash (ash x 32) -32))
+		      (setq x (+ start x)) )
+		  (if (>= y #x80000000)
+		      (setq y (ash (ash y 32) -32))
+		      (setq y (+ start y)) )
+	          (push (list  y x) result)))
+	    (nreverse result) )
 	   (t (return-from regmatch nil)))
     )
    )
