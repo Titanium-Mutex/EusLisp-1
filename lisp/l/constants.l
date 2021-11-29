@@ -104,7 +104,7 @@
 #+:Solaris2
 (defconstant internal-time-units-per-second 100)
 #+:linux
-(defconstant internal-time-units-per-second 100)
+(defconstant internal-time-units-per-second (unix:sysconf 2))
 #+:irix
 (defconstant internal-time-units-per-second 100)
 #+:irix6
