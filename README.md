@@ -1,6 +1,6 @@
 ## [EusLisp] [![Build Status](https://app.travis-ci.com/euslisp/EusLisp.svg?branch=master)](https://app.travis-ci.com/euslisp/EusLisp) [![Documentation Status](https://readthedocs.org/projects/euslisp/badge/?version=latest)](https://euslisp.readthedocs.io/en/latest/?badge=latest)
 
-EusLisp was originally developed by [Dr. Toshihiro Matsui at AIST](http://staff.aist.go.jp/t.matsui/ )
+EusLisp was originally developed by [Dr. Toshihiro Matsui at AIST](http://staff.aist.go.jp/t.matsui/ now moved to IISEC Institute of Information Security)
 
 This page and repository are maintained by [JSK](http://www.jsk.t.u-tokyo.ac.jp ) at The University of Tokyo.
 
