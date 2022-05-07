@@ -70,6 +70,7 @@
   (cond ((stringp x) x)
 	((symbolp x) (copy-seq (symbol-pname x)))
 	((numberp x) (princ-to-string x))
+	((consp x) (princ-to-string x))
 	((find-method x :string) (send x :string))
 	(t (error "cannot coerce to string " x))))
 
