@@ -793,11 +793,23 @@
  (:omit (x) (push x omit-list))
  )
 
+;; In order to create an object representing a record of a table, first define the table-class;
+;; (pq:make-table-class *db* "tablename" 'pkey).
+;; Then, an record object is instantiated by calling its :init method with a pkey.
+;; (instance tablename-table :init pkeyval)
+;; If you want to specify  the record by other query, you may give the query as the first
+;; arg, and specifying t in the where-flag.
+;; (instance tablename-table :init "id='matsui' and grade=1" t)
+
 (defmethod pgtable
   (:init (key &optional (where nil))
 	(setq values (make-list (length (send self :fields))))
 	(send self :read key where)
-	self)
+	;; note that an instance is created even the record is not found. 
+        ;; if rcount=0, no record is found, rcount=1, the true object is read,
+	;; if rcount>1, multiple records with the given where clause are found 
+        (if (> rcount 0) self nil))
+  (:rcount () rcount)
   (:db () (table-class-db (class self)) )
   (:fields () (table-class-field-list (class self)) )
   (:field-names () (mapcar #'second (send self :fields)))
@@ -826,6 +838,8 @@
   (:setf (var val) ; set field
      (let ((vpos (send self :varpos var)))
 	(unless  values (error "null values var"))
+	; (if (and (eql (send self :type var) :int4) (not (integerp val)))
+	;    (setq val (read-from-string val)))
 	(setf (elt values vpos) val) 
 	(if (eq var (send self :primary-key)) (setq pkey-val val))
 	val) )
