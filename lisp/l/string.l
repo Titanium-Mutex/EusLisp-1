@@ -72,7 +72,10 @@
 	((numberp x) (princ-to-string x))
 	((consp x) (princ-to-string x))
 	((find-method x :string) (send x :string))
-	(t (error "cannot coerce to string " x))))
+	(t (princ-to-string x))
+	; (t (error "cannot coerce to string " x))
+	)
+  )
 
 (defun make-string (size) (instantiate string size))
 

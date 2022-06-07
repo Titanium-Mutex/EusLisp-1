@@ -945,7 +945,8 @@
      ;; (setq slot-names (nreverse slot-names))
      (send tclass :init db (string-downcase table)
 		pkey fields)
-     ))
+     )) 
+   ) 
 ;;
 ;; define-table  --> define xxx-table class
 ;; database connection is needed at this define time

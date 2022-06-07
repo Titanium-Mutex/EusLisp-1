@@ -18,6 +18,7 @@
     (dolist (s msgs) (format strm " ~A" s))
     (princ ">" strm)
     self)
+ (:string () (format nil (send self :prin1)))
  (:warning (format &rest mesgs)
 	(apply #'warn format mesgs))
  (:error (&rest mesgs) (send* self :warning mesgs) (reploop "err: "))
