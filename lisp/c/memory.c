@@ -511,7 +511,7 @@ register pointer *oldsp;
   gcstack=newstack;
   gcsplimit= &gcstack[newsize-10];
   gcsp= &gcstack[top];
-  cfree(oldstack);
+  free(oldstack);
   }
 
 int mark_state;
