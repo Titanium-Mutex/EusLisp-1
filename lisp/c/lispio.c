@@ -379,6 +379,7 @@ pointer argv[];
 
 pointer GETMACROCH(ctx,n,argv)
 register context *ctx;
+int n;
 pointer argv[];
 { pointer rdtable;
   ckarg2(1,2);
@@ -553,7 +554,8 @@ pointer argv[];
         }  
       }
     else {
-	if (cch=='\\') cch=nextcch();
+       /* if (cch=='\\') cch=nextcch(); */ /* no escape is needed in formatting a string*/
+        /* Rather, char is escaped in string reading */
         writech(dest,cch);} }
   if (argv[0]==NIL) {
     a=makestring((char *)dest->c.stream.buffer->c.str.chars,
