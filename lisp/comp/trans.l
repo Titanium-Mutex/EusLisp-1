@@ -680,13 +680,18 @@ register context *ctx; int n; pointer *argv; pointer env;~%" entry)
        (let* ((s (prin1-to-string q)) (len (length s)) (ch))
 	  (format hfile "    \"")
 	  (dotimes (i len)
-	     (cond ((eql (char s i) #\\)	;escaped
-		    (write-byte #\\ hfile) (write-byte #\\ hfile))
-	           ((eql (char s i) #\")	;double quote
-		    (format hfile "\\\""))
-		   ((eql (char s i) #\newline)
-		    (format hfile "\\n"))
-		   (t (write-byte (char s i) hfile))))
+            (cond ((eql (char s i) #\\)        ;escaped
+                    (write-byte #\\ hfile) (write-byte #\\ hfile))
+                   ((eql (char s i) #\")        ;double quote
+                    (write-byte #\\ hfile) (write-byte #\" hfile)
+                    ; (format hfile "\\\"")
+                    )
+                   ((eql (char s i) #\newline)
+                     (write-byte #\\ hfile)  (write-byte 10 hfile)
+                     ; (format hfile "\\n")
+                     )
+                   (t (write-byte (char s i) hfile))))
+
 	  (format hfile "\",~%")))
      (format hfile "  };~%")
     )
