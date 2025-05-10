@@ -1,6 +1,7 @@
 /*************************************************************
 /* euslog.c 2021-10-12 by Toshihiro Matsui
-/* % cc -c -fpic -DLinux -Dx86_64 -falign-functions=8 -DGCC -shared euslog.c
+/* % cc -c -fpic -DLinux -Dx86_64 -falign-functions=8 -DGCC\
+   -shared -I../../include euslog.c
 /* % ld -o euslog.so -shared euslog.o
 /* From euslisp,
 /* (openlog "eventtag" option default-facility)
