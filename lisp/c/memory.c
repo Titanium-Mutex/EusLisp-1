@@ -62,7 +62,7 @@ long alloccount[MAXBUDDY];
 static  pointer dispose[MAXDISPOSE];
 static  int dispose_count;
 
-newchunk(k)
+int newchunk(k)
 register int k;
 { register int s;
   register struct chunk *cp;  
