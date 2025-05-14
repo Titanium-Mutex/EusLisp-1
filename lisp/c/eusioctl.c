@@ -37,7 +37,7 @@ pointer x;
   return(x);}
 
 static pointer ioctl_struct(n,argv,ctlcode,bufsize)
-int n,bufsize;
+int n,bufsize, ctlcode;
 pointer argv[];
 { int fd,stat;
   pointer buf;
@@ -49,7 +49,7 @@ pointer argv[];
   else return(buf);}
 
 static pointer ioctl_int(n,argv,ctlcode)
-int n;
+int n, ctlcode;
 pointer argv[];
 { int fd,stat,intarg;
   pointer buf;

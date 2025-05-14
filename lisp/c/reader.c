@@ -821,7 +821,7 @@ pointer f;
   if (q==(pointer)EOF) return((pointer)EOF);
   return(cons(ctx,QUOTE,cons(ctx,q,NIL)));}
 
-static pointer readcomment((context *ctx, pointer f)
+static pointer readcomment(context *ctx, pointer f)
 { register Char ch;
   do { ch=readch(f);} while (ch!='\n' && ch!=EOF);
   return((pointer)UNBOUND);}
