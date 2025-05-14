@@ -13,6 +13,8 @@ static char *rcsid="@(#) $Id$";
 #include <signal.h>
 #include <dlfcn.h>
 #include <fcntl.h>
+#include <malloc.h>
+
 
 #if Solaris2
 #include <synch.h>
@@ -26,9 +28,9 @@ unsigned int thr_self() { return(1);}
 #endif
 
 
-#if Linux
+/* #if Linux
 #define M_MMAP_MAX (-4)
-#endif
+#endif */
 #if Darwin
 int _end;
 #endif
@@ -1256,7 +1258,7 @@ register context *ctx;
 #endif
   }
 
-main(argc,argv)
+int  main(argc,argv)
 int argc;
 char *argv[];
 { int i, stat=0;
