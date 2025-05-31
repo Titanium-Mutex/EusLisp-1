@@ -105,7 +105,8 @@
 (fib 30)	0.235s	Atom D2700 4-cores/2.3GHz (2012.8)
 (fib 30)	1.13s	Raspberry Pi (2013)
 (fib 30)	0.0475s core-i5 2500 3.3GHz (2012)
-
+(fib 30)	0.047s core i5 13620 VirtualBox (2024)
+(fib 30)	0.070s	N100 (2025)
 ----------------------------------
 ifib: fibonacci with integer declarations
 (ifib 20)	75ms		sun4/330 (-o2)
@@ -149,6 +150,8 @@ Interpreted fib
 (fib 20)	  21ms		atom 2.3GHz (interpreted, ATOM D2700, 2012)
 (fib 20)	 113ms		Raspberry Pi (2013) probably cache is weak
 (fib 20)	   5.1ms	core-i5 2500 3.3GHz (2012)
+(fib 20)	  2ms		core-i5 13620 (2024) VirtualBox
+(fib 20)	  3.5ms		N100 (2025) 25,000yen miniPC
 	
 (prime 1000000)	865ms		Pen-II/400
 
