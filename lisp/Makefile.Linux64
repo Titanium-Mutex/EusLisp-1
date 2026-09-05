@@ -48,6 +48,7 @@ WFLAGS= #-Wall -Wno-unused -Wno-switch -Wno-return-type
 
 CFLAGS= $(WFLAGS) -fPIC -D$(MACHINE) -DLinux -D_REENTRANT -DVERSION=\"$(VERSION)\" \
 	-DLIB6 $(ALIGN_FUNCTIONS) \
+	-Wno-incompatible-pointer-types  -Wno-int-conversion \
         $(DEBUG) $(CPU_OPTIMIZE) $(THREAD) -D$(XVERSION) \
 	-DGCC $(GCC3) \
 	        -I/usr/include -I/usr/X11R6/include -I$(EUSDIR)/include
