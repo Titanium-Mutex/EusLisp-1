@@ -9,7 +9,7 @@ static char *rcsid= "@(#)$Id: pixword.c,v 1.1.1.1 2003/11/20 07:46:30 eus Exp $"
 #pragma init (init_object_module)
 extern void pixword(context *, int, pointer *);
 
-static init_object_module()
+static void init_object_module()
   { add_module_initializer("pixword", pixword);}
 
 pointer SPLIT_RGB(ctx,n,argv)
