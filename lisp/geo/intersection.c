@@ -12,7 +12,7 @@
 #pragma init (init_object_module)
 extern pointer intersection();
 
-static init_object_module()
+static void init_object_module()
   { add_module_initializer("intersection", intersection);}
 
 pointer LINEINTERSECTION(ctx,n,argv)
