@@ -887,10 +887,12 @@ pointer args[];
       int i1,i2;} i;
     } numbox;
   double f;
+  eusinteger_t xptr;
 
   if (code->c.fcode.entry2 != NIL) {
-    ifunc = (((eusinteger_t)ifunc)&0xffffffff00000000) 
+    xptr= (((eusinteger_t)ifunc)&0xffffffff00000000) 
       | (intval(code->c.fcode.entry2)&0x00000000ffffffff);
+	ifunc=(eusinteger_t(*)(void))xptr; /*2026Sep Matsui, to dismiss type coversion error*/
     /* R.Hanai 090726 */
   }
   
