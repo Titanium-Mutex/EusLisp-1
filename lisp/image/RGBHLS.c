@@ -11,7 +11,7 @@ static char *rcsid= "@(#)$Id: RGBHLS.c,v 1.1.1.1 2003/11/20 07:46:30 eus Exp $";
 #pragma init (init_object_module)
 pointer RGBHLS();
 
-static init_object_module()
+static void init_object_module()
   { add_module_initializer("RGBHLS", RGBHLS);}
 
 rgb_to_hls(r,g,b,h,l,s)
