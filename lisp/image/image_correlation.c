@@ -15,7 +15,7 @@
 #pragma init (init_object_module)
 pointer image_correlation();
 
-static init_object_module()
+static  void  init_object_module()
   { add_module_initializer("image_correlation", image_correlation);}
 
 
@@ -41,6 +41,7 @@ pointer eusary;
 
 static int img_correlation1(image,pattern,x,y)
 register pixel_image *image, *pattern;
+int x,y;
 { register unsigned char *img=image->imgary, *pat=pattern->imgary;
   register int i, j;
   register int ww=pattern->width;
