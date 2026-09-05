@@ -4,7 +4,7 @@
 
 #pragma init (init_object_module)
 extern void convolve(context *, int, pointer *);
-static init_object_module()
+static void init_object_module()
   { add_module_initializer("convolve", convolve);}
 
 #define is2Dstring(a) (isarray(a) && \
