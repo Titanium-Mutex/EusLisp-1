@@ -775,7 +775,7 @@ pointer arg;
     if (ctx->blkfp->kind==TAGBODYFRAME &&
 	(body=(pointer)assq(tag,ctx->blkfp->name))!=NIL) {
       unwind(ctx,(pointer *)ctx->blkfp);
-      euslongjmp(ctx->blkfp->jbp,body);}/* ???? */
+      euslongjmp((struct __jmp_buf_tag *)ctx->blkfp->jbp,body);}/* ???? */
       /* euslongjmp(*(ctx->blkfp->jbp),body);} *//* ??? eus_rbar */
     ctx->blkfp=ctx->blkfp->lexklink;}
   error(E_USER,(pointer)"go tag not found");}
