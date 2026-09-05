@@ -178,7 +178,7 @@ pointer argv[];
   return(work);
 }
 
-static windowcoords(x,y,z,w,wc)
+static int windowcoords(x,y,z,w,wc)
 eusfloat_t x,y,z,w,wc[];
 { register int i,c,code;
   wc[0]=w+x; wc[1]=w-x; wc[2]=w+y; wc[3]=w-y; wc[4]=z; wc[5]=w-z;
